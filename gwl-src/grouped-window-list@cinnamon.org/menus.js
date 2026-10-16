@@ -19,6 +19,8 @@ const {
     autoStartStrDir
 } = require('./constants');
 
+const TileWindows = require('./tileWindows');
+
 const convertRange = function(value, r1, r2) {
     return ((value - r1[0]) * (r2[1] - r2[0])) / (r1[1] - r1[0]) + r2[0];
 };
@@ -273,6 +275,33 @@ class AppMenuButtonRightClickMenu extends Applet.AppletPopupMenu {
             this.addMenuItem(item);
         }
         this.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+
+        // Tile windows (ported from Zorin Taskbar "Tile N Windows")
+        if (hasWindows && this.groupState.metaWindows.length > 0) {
+            const tileSubMenu = new PopupMenu.PopupSubMenuMenuItem(_('Tile windows'));
+            this.addMenuItem(tileSubMenu);
+
+            const monitor = this.state.trigger('getPanelMonitor');
+            const monitorIndex = monitor ? monitor.index : this.groupState.lastFocused.get_monitor();
+
+            const addTileOption = (label, layout) => {
+                const tileItem = createMenuItem({label, icon: 'view-grid-symbolic'});
+                this.signals.connect(tileItem, 'activate', () => {
+                    TileWindows.tileWindows(this.groupState.metaWindows.slice(), monitorIndex, layout);
+                });
+                tileSubMenu.menu.addMenuItem(tileItem);
+            };
+
+            if (this.groupState.metaWindows.length > 1) {
+                addTileOption(_('Tile all windows in a grid'), 'auto');
+            }
+            addTileOption(_('Left and right halves'), 'half-h');
+            addTileOption(_('Top and bottom halves'), 'half-v');
+            addTileOption(_('Three columns'), 'thirds');
+            addTileOption(_('Two thirds - one third'), 'two-thirds-left');
+            addTileOption(_('One third - two thirds'), 'two-thirds-right');
+            addTileOption(_('Four quarters'), 'quarters');
+        }
 
         // Window controls
         if (hasWindows) {
