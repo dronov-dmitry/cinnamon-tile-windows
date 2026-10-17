@@ -47,6 +47,10 @@ Alt+F2 → r → Enter
 - `menus.js` — добавлено подменю «Tile windows» в `AppMenuButtonRightClickMenu`
 - Проверено на Cinnamon 6.6.9+zena (Linux Mint 22.3 "Zena"), X11
 
+## Демонстрация
+
+Видео с работой функции: https://youtu.be/u3yS7SXK9NI
+
 ## Статус upstream
 
 Предложение добавить эту функцию в официальный Cinnamon было закрыто как `not planned` (см. https://github.com/linuxmint/cinnamon/issues/14056). Этот репозиторий — независимое решение для пользователей, которым нужен этот функционал.
