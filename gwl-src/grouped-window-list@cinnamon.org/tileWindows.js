@@ -120,6 +120,12 @@ function placeWindows(windows, cells) {
          */
         win.move_resize_frame(true, x, y, w, h);
         win.move_frame(true, x, y);
+
+        /*
+         * Raise every tiled window to the top so they appear above other
+         * windows after tiling.
+         */
+        win.raise();
     });
 }
 
@@ -150,9 +156,10 @@ function tileWindows(windows, monitorIndex, layout) {
     // events have been processed.
     setTimeout(() => {
         place();
+        // Raise all tiled windows so they appear above other windows after tiling
+        windows.forEach(win => win.raise());
         if (activeWindow) {
             Main.activateWindow(activeWindow, global.get_current_time());
-            activeWindow.raise();
         }
     }, 250);
 }
