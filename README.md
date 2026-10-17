@@ -1,38 +1,56 @@
-# 22_LinuxMint_Taskbar — таскбар Cinnamon с плиткованием окон
+# cinnamon-tile-windows
 
-## Что это
+**Плиткование окон из ПКМ-меню таскбара Cinnamon** — без PR в upstream, как самостоятельный пользовательский апплет.
 
-Доработка стандартного апплета Cinnamon **Grouped window list** (`grouped-window-list@cinnamon.org`), который и служит таскбаром в Linux Mint 22.3 / Cinnamon 6.6.
+## Что делает
 
-Добавлено:
-* В ПКМ-меню значка приложения в таскбаре — подменю **«Tile windows»** (Разложить плиткой).
-* Раскладки: авто-сетка, половины (влево/вправо / вверх/вниз), трети, две трети + треть, четыре четверти.
-* Алгоритм портирован из проверенной фичи «Tile N Windows» проекта Zorin Taskbar (GPL-2.0-or-later).
+Добавляет в стандартный апплет Cinnamon **Grouped window list** (`grouped-window-list@cinnamon.org`) пункт контекстного меню:
 
-## Адрес оригинала на GitHub
+**ПКМ по значку приложения в таскбаре → «Tile windows» → раскладка:**
+- `Tile all windows in a grid` — авто-сетка (столбцы × строки)
+- `Left and right halves` — две половины по горизонтали
+- `Top and bottom halves` — две половины по вертикали
+- `Three columns` — три колонки
+- `Two thirds – one third` / `One third – two thirds`
+- `Four quarters` — 2×2
 
-Апплет входит в сам репозиторий Cinnamon:
+Все окна группы всплывают на верх после плиткования.
 
-https://github.com/linuxmint/cinnamon/tree/master/files/usr/share/cinnamon/applets/grouped-window-list@cinnamon.org
+## Как установить (себе или другому пользователю)
 
-## Безопасность / откат
+```bash
+git clone https://github.com/dronov-dmitry/cinnamon-tile-windows.git
+cd cinnamon-tile-windows
+./install.sh
+```
 
-Системные файлы **не трогаются**. Установка кладёт пользовательскую копию в
-`~/.local/share/cinnamon/applets/`, которая загружается приоритетнее системной.
+Затем перезапустить Cinnamon:
+- `Alt+F2 → ввести r → Enter`
+- или в терминале: `cinnamon --replace &`
 
-* Установить: `./install.sh` → перезапуск Cinnamon (`Alt+F2 → r → Enter`).
-* Откат: `./uninstall.sh` → перезапуск Cinnamon.
+## Как откатить
 
-## Как работает
+```bash
+./uninstall.sh
+Alt+F2 → r → Enter
+```
 
-ПКМ по значку окна в таскбаре → «Tile windows» → нужная раскладка. Все окна приложения перекладываются на рабочую область монитора, где стоит панель. Активное окно после операции остаётся активным.
+## Безопасность
 
-## Структура
+Системные файлы в `/usr/share/cinnamon/applets/` **не трогаются**.  
+Установка кладёт пользовательскую копию в `~/.local/share/cinnamon/applets/`, которая загружается приоритетнее системной. Бэкап оригинала сохраняется в `~/.local/share/cinnamon/applets/.backups/`.
 
-* `gwl-src/` — изменённые исходники апплета (ветка `feature/tile-app-windows`).
-* `install.sh` / `uninstall.sh` — установка и откат.
-* Бэкап системного оригинала: `~/.local/share/cinnamon/applets/.backups/`.
+## Для разработчиков
+
+- `gwl-src/` — изменённые исходники апплета (ветка `feature/tile-app-windows`)
+- `tileWindows.js` — новый модуль алгоритма плиткования
+- `menus.js` — добавлено подменю «Tile windows» в `AppMenuButtonRightClickMenu`
+- Проверено на Cinnamon 6.6.9+zena (Linux Mint 22.3 "Zena"), X11
+
+## Статус upstream
+
+Предложение добавить эту функцию в официальный Cinnamon было закрыто как `not planned` (см. https://github.com/linuxmint/cinnamon/issues/14056). Этот репозиторий — независимое решение для пользователей, которым нужен этот функционал.
 
 ## Лицензия
 
-Главный код апплета — GPL-2.0-or-later (как и Cinnamon). Модуль тайлинга портирован из Zorin Taskbar (https://github.com/ZorinOS/zorin-taskbar), тоже GPL-2.0-or-later.
+GPL-2.0-or-later (как и Cinnamon).
